@@ -16,10 +16,16 @@
               2019  |  net47
               2020  |  net471
               2021  |  net48
+              2022  |  net48
+              2023  |  net48
+              2024  |  net48
+              2025  |  net8.0-windows
+              2026  |  net8.0-windows
       For example you can exclude Revit 2014, by simply removing net40 target belows
       -->
-    <TargetFrameworks>net46;net47;net471;net48</TargetFrameworks>
+    <TargetFrameworks>net46;net47;net471;net48;net8.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win</RuntimeIdentifiers>
+    <RevitVersion Condition=" '$(RevitVersion)' == '' ">2025</RevitVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
@@ -83,14 +89,21 @@
     <OutputPath>..\bin\Debug\$(RevitVersion)</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'net47' OR '$(TargetFramework)' == 'net471' OR '$(TargetFramework)' == 'net48'">
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(DefineConstants.Contains('WINFORMS'))">
+  <ItemGroup Condition="$(DefineConstants.Contains('WINFORMS')) AND ('$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'net47' OR '$(TargetFramework)' == 'net471' OR '$(TargetFramework)' == 'net48')">
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+    <PackageReference Include="System.Drawing.Common">
+       <Version>8.0.3</Version>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -99,6 +112,11 @@
     <PackageReference Include="Autodesk.Revit.SDK" Version="2019.*" Condition=" '$(RevitVersion)' == '2019' " PrivateAssets="All" />
     <PackageReference Include="Autodesk.Revit.SDK" Version="2020.*" Condition=" '$(RevitVersion)' == '2020' " PrivateAssets="All" />
     <PackageReference Include="Autodesk.Revit.SDK" Version="2021.*" Condition=" '$(RevitVersion)' == '2021' " PrivateAssets="All" />
+    <PackageReference Include="Autodesk.Revit.SDK" Version="2022.*" Condition=" '$(RevitVersion)' == '2022' " PrivateAssets="All" />
+    <PackageReference Include="Autodesk.Revit.SDK" Version="2023.*" Condition=" '$(RevitVersion)' == '2023' " PrivateAssets="All" />
+    <PackageReference Include="Autodesk.Revit.SDK" Version="2024.*" Condition=" '$(RevitVersion)' == '2024' " PrivateAssets="All" />
+    <PackageReference Include="Autodesk.Revit.SDK" Version="2025.*" Condition=" '$(RevitVersion)' == '2025' " PrivateAssets="All" />
+    <PackageReference Include="Autodesk.Revit.SDK" Version="2026.*" Condition=" '$(RevitVersion)' == '2026' " PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="PreventRevitSDKCopyLocal" AfterTargets="ResolveReferences">
@@ -208,4 +226,21 @@
     <Delete Files="@(AddinFiles)" />
   </Target>
 
+  <Target Name="Build2022" AfterTargets="DispatchToInnerBuilds">
+    <Message Importance="high" Text="*** running post-dispatch builds ***" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Properties="Configuration=$(Configuration); TargetFramework=net48; RevitVersion=2022"></MSBuild>
+  </Target>
+  <Target Name="Build2023" AfterTargets="DispatchToInnerBuilds">
+    <Message Importance="high" Text="*** running post-dispatch builds ***" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Properties="Configuration=$(Configuration); TargetFramework=net48; RevitVersion=2023"></MSBuild>
+  </Target>
+  <Target Name="Build2024" AfterTargets="DispatchToInnerBuilds">
+    <Message Importance="high" Text="*** running post-dispatch builds ***" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Properties="Configuration=$(Configuration); TargetFramework=net48; RevitVersion=2024"></MSBuild>
+  </Target>
+  <Target Name="Build2026" AfterTargets="DispatchToInnerBuilds">
+    <Message Importance="high" Text="*** running post-dispatch builds ***" />
+    <MSBuild Projects="$(MSBuildProjectFile)" Properties="Configuration=$(Configuration); TargetFramework=net8.0-windows; RevitVersion=2026"></MSBuild>
+  </Target>	
+	
 </Project>
